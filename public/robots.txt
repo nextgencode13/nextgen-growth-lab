@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nextgen-wisdom.vercel.app/sitemap.xml
