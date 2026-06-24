@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { books } from '@/lib/data/books'
+import { bookSummaries } from '@/lib/data/summaries'
 import BookHero from '@/components/books/BookHero'
+import DetailedSummary from '@/components/books/DetailedSummary'
 import KeyLessons from '@/components/books/KeyLessons'
 import ActionPlan from '@/components/books/ActionPlan'
 import QuoteCards from '@/components/books/QuoteCards'
@@ -46,26 +48,15 @@ export default async function BookPage({ params }: PageProps) {
       <ReadingProgress />
       <BookHero book={book} />
 
-      {/* Quick Summary */}
-      <section className="py-16" style={{ backgroundColor: 'var(--color-canvas)' }}>
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="max-w-2xl">
-            <h2
-              className="text-3xl md:text-4xl font-normal tracking-[-0.03em] mb-6"
-              style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-ink)' }}
-            >
-              Quick Summary
-            </h2>
-            <p className="text-base leading-relaxed" style={{ color: 'var(--color-body)' }}>
-              {book.summary}
-            </p>
-          </div>
-        </div>
-      </section>
+      <DetailedSummary
+        sections={bookSummaries[book.slug] ?? []}
+        bookTitle={book.title}
+        introSummary={book.summary}
+      />
 
       <KeyLessons lessons={book.lessons} />
       <ActionPlan steps={book.actionSteps} />
-      <QuoteCards quotes={book.quotes} bookTitle={book.title} />
+      <QuoteCards quotes={book.quotes} bookTitle={book.title} bookSlug={book.slug} />
       <VisualTakeaways book={book} />
       <RelatedBooks slugs={book.relatedBooks} />
     </>

@@ -4,6 +4,7 @@ import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import ThemeProvider from '@/components/ui/ThemeProvider'
+import KeyboardShortcutsProvider from '@/components/KeyboardShortcutsProvider'
 
 const cormorant = Cormorant_Garamond({
   variable: '--font-cormorant',
@@ -47,6 +48,15 @@ export const metadata: Metadata = {
       'Discover powerful insights from the most influential books ever written.',
   },
   robots: { index: true, follow: true },
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'NextGen Wisdom',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -58,6 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="min-h-full flex flex-col" style={{ fontFamily: 'var(--font-sans)' }}>
         <ThemeProvider>
+          <KeyboardShortcutsProvider />
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />

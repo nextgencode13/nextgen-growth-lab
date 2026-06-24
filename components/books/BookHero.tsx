@@ -1,11 +1,11 @@
 'use client'
 import { motion } from 'framer-motion'
-import { Star, Clock, BookOpen, Share2 } from 'lucide-react'
+import { Star, Clock, BookOpen, Share2, BookmarkPlus, BookOpenCheck, CheckCircle2, Printer } from 'lucide-react'
+import Link from 'next/link'
 import type { Book } from '@/lib/types'
 import BookCover from '@/components/ui/BookCover'
 import Badge from '@/components/ui/Badge'
 import { useBookmarks } from '@/lib/hooks/useBookmarks'
-import { Bookmark } from 'lucide-react'
 
 const difficultyColor: Record<string, string> = {
   Beginner: '#5db872',
@@ -13,9 +13,37 @@ const difficultyColor: Record<string, string> = {
   Advanced: '#c64545',
 }
 
+const statusConfig = {
+  null: {
+    label: 'Add to List',
+    Icon: BookmarkPlus,
+    color: 'var(--color-on-dark-soft)',
+    border: 'var(--color-surface-dark-elevated)',
+  },
+  want: {
+    label: 'Want to Read',
+    Icon: BookmarkPlus,
+    color: '#f59e0b',
+    border: '#f59e0b',
+  },
+  reading: {
+    label: 'Reading',
+    Icon: BookOpen,
+    color: '#60a5fa',
+    border: '#60a5fa',
+  },
+  finished: {
+    label: 'Finished',
+    Icon: BookOpenCheck,
+    color: '#34d399',
+    border: '#34d399',
+  },
+} as const
+
 export default function BookHero({ book }: { book: Book }) {
-  const { isBookmarked, toggle } = useBookmarks()
-  const bookmarked = isBookmarked(book.slug)
+  const { cycleStatus, getStatus } = useBookmarks()
+  const status = getStatus(book.slug) ?? 'null'
+  const config = statusConfig[status as keyof typeof statusConfig]
 
   function share() {
     if (navigator.share) {
@@ -32,13 +60,13 @@ export default function BookHero({ book }: { book: Book }) {
     >
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="grid md:grid-cols-[auto_1fr] gap-10 md:gap-16 items-start">
-          {/* Cover */}
+          {/* Cover with 3D flip */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           >
-            <BookCover book={book} size="xl" />
+            <BookCover book={{ ...book, keyInsight: book.keyInsight }} size="xl" flip />
           </motion.div>
 
           {/* Meta */}
@@ -107,19 +135,21 @@ export default function BookHero({ book }: { book: Book }) {
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
+              {/* 3-state reading status cycle button */}
               <button
-                onClick={() => toggle(book.slug)}
+                onClick={() => cycleStatus(book.slug)}
                 className="flex items-center gap-2 px-4 py-2 rounded-[8px] text-sm font-medium border transition-all"
                 style={{
-                  borderColor: bookmarked ? 'var(--color-coral)' : 'var(--color-surface-dark-elevated)',
-                  color: bookmarked ? 'var(--color-coral)' : 'var(--color-on-dark-soft)',
+                  borderColor: config.border,
+                  color: config.color,
                   backgroundColor: 'transparent',
                 }}
               >
-                <Bookmark size={14} fill={bookmarked ? 'var(--color-coral)' : 'none'} />
-                {bookmarked ? 'Bookmarked' : 'Bookmark'}
+                <config.Icon size={14} />
+                {config.label}
               </button>
+
               <button
                 onClick={share}
                 className="flex items-center gap-2 px-4 py-2 rounded-[8px] text-sm font-medium border transition-all"
@@ -132,6 +162,33 @@ export default function BookHero({ book }: { book: Book }) {
                 <Share2 size={14} />
                 Share
               </button>
+
+              <Link
+                href={`/books/${book.slug}/print`}
+                target="_blank"
+                className="flex items-center gap-2 px-4 py-2 rounded-[8px] text-sm font-medium border transition-all"
+                style={{
+                  borderColor: 'var(--color-surface-dark-elevated)',
+                  color: 'var(--color-on-dark-soft)',
+                  textDecoration: 'none',
+                }}
+              >
+                <Printer size={14} />
+                Export PDF
+              </Link>
+
+              <Link
+                href={`/books/${book.slug}/quiz`}
+                className="flex items-center gap-2 px-4 py-2 rounded-[8px] text-sm font-medium border transition-all"
+                style={{
+                  borderColor: 'var(--color-surface-dark-elevated)',
+                  color: 'var(--color-on-dark-soft)',
+                  textDecoration: 'none',
+                }}
+              >
+                <CheckCircle2 size={14} />
+                Take Quiz
+              </Link>
             </div>
           </motion.div>
         </div>

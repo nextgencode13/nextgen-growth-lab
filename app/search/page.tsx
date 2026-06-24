@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, SlidersHorizontal, X } from 'lucide-react'
@@ -16,11 +16,45 @@ export default function SearchPage() {
   const [difficulty, setDifficulty] = useState('')
   const [sort, setSort] = useState('Rating')
   const [showFilters, setShowFilters] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const searchContainerRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const c = params.get('category')
     if (c) setCategory(c)
   }, [params])
+
+  // Close suggestions on outside click
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  // Focus search on / keydown (keyboard shortcut)
+  useEffect(() => {
+    function handler(e: KeyboardEvent) {
+      if (e.key === '/' && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) {
+        e.preventDefault()
+        inputRef.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [])
+
+  const suggestions = useMemo(() => {
+    if (!query.trim() || query.length < 1) return []
+    const q = query.toLowerCase()
+    return books
+      .filter(b => b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q))
+      .slice(0, 5)
+  }, [query])
 
   const filtered = useMemo(() => {
     let result = [...books]
@@ -74,30 +108,64 @@ export default function SearchPage() {
           </p>
         </div>
 
-        {/* Search bar */}
-        <div
-          className="flex items-center gap-3 px-4 py-3 rounded-[8px] border mb-6"
-          style={{ backgroundColor: 'var(--color-canvas)', borderColor: 'var(--color-hairline)' }}
-        >
-          <Search size={18} style={{ color: 'var(--color-muted-soft)' }} />
-          <input
-            type="text"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            placeholder="Search books, authors, topics..."
-            className="flex-1 bg-transparent outline-none text-base"
-            style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-sans)' }}
-          />
-          {query && (
-            <button onClick={() => setQuery('')} style={{ color: 'var(--color-muted-soft)' }}>
-              <X size={16} />
-            </button>
-          )}
+        {/* Search bar with autocomplete */}
+        <div ref={searchContainerRef} className="relative mb-6">
+          <div
+            className="flex items-center gap-3 px-4 py-3 rounded-[8px] border"
+            style={{ backgroundColor: 'var(--color-canvas)', borderColor: showSuggestions && suggestions.length ? 'var(--color-coral)' : 'var(--color-hairline)' }}
+          >
+            <Search size={18} style={{ color: 'var(--color-muted-soft)' }} />
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={e => { setQuery(e.target.value); setShowSuggestions(true) }}
+              onFocus={() => setShowSuggestions(true)}
+              placeholder="Search books, authors, topics... (press / to focus)"
+              className="flex-1 bg-transparent outline-none text-base"
+              style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-sans)' }}
+            />
+            {query && (
+              <button onClick={() => { setQuery(''); setShowSuggestions(false) }} style={{ color: 'var(--color-muted-soft)' }}>
+                <X size={16} />
+              </button>
+            )}
+          </div>
+
+          {/* Autocomplete dropdown */}
+          <AnimatePresence>
+            {showSuggestions && suggestions.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.15 }}
+                className="absolute top-full left-0 right-0 z-50 rounded-[8px] border shadow-lg mt-1 overflow-hidden"
+                style={{ backgroundColor: 'var(--color-canvas)', borderColor: 'var(--color-hairline)' }}
+              >
+                {suggestions.map(book => (
+                  <button
+                    key={book.id}
+                    onClick={() => { setQuery(book.title); setShowSuggestions(false) }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left transition-all hover:bg-opacity-50"
+                    style={{ borderBottom: '1px solid var(--color-hairline)' }}
+                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--color-surface-card)')}
+                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+                  >
+                    <span className="text-base">{book.coverGradient.includes('amber') || book.coverGradient.includes('orange') ? '📙' : book.coverGradient.includes('blue') ? '📘' : book.coverGradient.includes('green') ? '📗' : book.coverGradient.includes('violet') || book.coverGradient.includes('purple') ? '📓' : '📕'}</span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium truncate" style={{ color: 'var(--color-ink)' }}>{book.title}</p>
+                      <p className="text-xs truncate" style={{ color: 'var(--color-muted-soft)' }}>{book.author} · {book.category}</p>
+                    </div>
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Filter bar */}
         <div className="flex flex-wrap gap-2 mb-8">
-          {/* Category pills */}
           <button
             onClick={() => setCategory('')}
             className="px-3 py-1.5 rounded-full text-sm font-medium transition-all"
@@ -132,11 +200,7 @@ export default function SearchPage() {
               Filters
             </button>
             {hasFilters && (
-              <button
-                onClick={clearFilters}
-                className="text-xs"
-                style={{ color: 'var(--color-coral)' }}
-              >
+              <button onClick={clearFilters} className="text-xs" style={{ color: 'var(--color-coral)' }}>
                 Clear all
               </button>
             )}

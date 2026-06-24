@@ -4,6 +4,7 @@ import FeaturedBooks from '@/components/home/FeaturedBooks'
 import CategoriesSection from '@/components/home/CategoriesSection'
 import QuoteCarousel from '@/components/home/QuoteCarousel'
 import DailyWisdom from '@/components/home/DailyWisdom'
+import TrendingBooks from '@/components/home/TrendingBooks'
 
 export default function HomePage() {
   return (
@@ -11,6 +12,7 @@ export default function HomePage() {
       <HeroSection />
       <StatsSection />
       <FeaturedBooks />
+      <TrendingBooks />
       <CategoriesSection />
       <QuoteCarousel />
       <DailyWisdom />
