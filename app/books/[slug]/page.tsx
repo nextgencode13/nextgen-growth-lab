@@ -10,6 +10,8 @@ import QuoteCards from '@/components/books/QuoteCards'
 import VisualTakeaways from '@/components/books/VisualTakeaways'
 import RelatedBooks from '@/components/books/RelatedBooks'
 import ReadingProgress from '@/components/ui/ReadingProgress'
+import WhatToReadNext from '@/components/books/WhatToReadNext'
+import SummaryProgressSidebar from '@/components/books/SummaryProgressSidebar'
 
 // Next.js 16: params is a Promise
 type PageProps = { params: Promise<{ slug: string }> }
@@ -43,22 +45,31 @@ export default async function BookPage({ params }: PageProps) {
   const book = books.find(b => b.slug === slug)
   if (!book) notFound()
 
+  const sections = bookSummaries[book.slug] ?? []
+  const sectionIds = sections.map((_, i) => `section-${i}`)
+
   return (
     <>
       <ReadingProgress />
       <BookHero book={book} />
+      <SummaryProgressSidebar
+        sectionCount={sections.length}
+        sectionIds={sectionIds}
+        bookSlug={book.slug}
+      />
 
       <DetailedSummary
-        sections={bookSummaries[book.slug] ?? []}
+        sections={sections}
         bookTitle={book.title}
         introSummary={book.summary}
       />
 
       <KeyLessons lessons={book.lessons} />
       <ActionPlan steps={book.actionSteps} />
-      <QuoteCards quotes={book.quotes} bookTitle={book.title} bookSlug={book.slug} />
+      <QuoteCards quotes={book.quotes} bookTitle={book.title} bookSlug={book.slug} author={book.author} />
       <VisualTakeaways book={book} />
       <RelatedBooks slugs={book.relatedBooks} />
+      <WhatToReadNext slug={book.slug} />
     </>
   )
 }

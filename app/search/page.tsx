@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Search, SlidersHorizontal, X } from 'lucide-react'
 import { books, categories } from '@/lib/data/books'
 import BookCard from '@/components/books/BookCard'
+import { scoreSearch } from '@/lib/utils/search'
 
 const difficulties = ['Beginner', 'Intermediate', 'Advanced']
 const sortOptions = ['Rating', 'Title', 'Read Time']
@@ -57,30 +58,24 @@ export default function SearchPage() {
   }, [query])
 
   const filtered = useMemo(() => {
-    let result = [...books]
+    let scored = scoreSearch(query, books)
+
+    if (category) scored = scored.filter(r => r.book.category === category)
+    if (difficulty) scored = scored.filter(r => r.book.difficulty === difficulty)
 
     if (query.trim()) {
-      const q = query.toLowerCase()
-      result = result.filter(
-        b =>
-          b.title.toLowerCase().includes(q) ||
-          b.author.toLowerCase().includes(q) ||
-          b.category.toLowerCase().includes(q) ||
-          b.tags.some(t => t.includes(q))
-      )
+      scored = scored.filter(r => r.score > 0)
+      scored.sort((a, b) => b.score - a.score)
+    } else {
+      scored.sort((a, b) => {
+        if (sort === 'Rating') return b.book.rating - a.book.rating
+        if (sort === 'Title') return a.book.title.localeCompare(b.book.title)
+        if (sort === 'Read Time') return parseInt(a.book.readTime) - parseInt(b.book.readTime)
+        return 0
+      })
     }
 
-    if (category) result = result.filter(b => b.category === category)
-    if (difficulty) result = result.filter(b => b.difficulty === difficulty)
-
-    result.sort((a, b) => {
-      if (sort === 'Rating') return b.rating - a.rating
-      if (sort === 'Title') return a.title.localeCompare(b.title)
-      if (sort === 'Read Time') return parseInt(a.readTime) - parseInt(b.readTime)
-      return 0
-    })
-
-    return result
+    return scored
   }, [query, category, difficulty, sort])
 
   function clearFilters() {
@@ -267,13 +262,18 @@ export default function SearchPage() {
         {/* Results count */}
         <p className="text-sm mb-6" style={{ color: 'var(--color-muted-soft)' }}>
           {filtered.length} book{filtered.length !== 1 ? 's' : ''} found
+          {query.trim() && filtered[0]?.matchedTag && (
+            <span className="ml-2 px-2 py-0.5 rounded-full text-xs" style={{ backgroundColor: 'var(--color-surface-card)', color: 'var(--color-coral)' }}>
+              Matched tag: {filtered[0].matchedTag}
+            </span>
+          )}
         </p>
 
         {/* Grid */}
         <AnimatePresence mode="popLayout">
           {filtered.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {filtered.map((book, i) => (
+              {filtered.map(({ book, matchedTag }, i) => (
                 <motion.div
                   key={book.id}
                   layout
@@ -281,8 +281,17 @@ export default function SearchPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3, delay: i * 0.04 }}
+                  className="relative"
                 >
                   <BookCard book={book} />
+                  {matchedTag && query.trim() && (
+                    <span
+                      className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-medium"
+                      style={{ backgroundColor: 'var(--color-coral)', color: '#fff' }}
+                    >
+                      #{matchedTag}
+                    </span>
+                  )}
                 </motion.div>
               ))}
             </div>

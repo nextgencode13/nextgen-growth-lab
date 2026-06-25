@@ -7,10 +7,13 @@ import SpikeMarkIcon from '@/components/ui/SpikeMarkIcon'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 
 const links = [
-  { href: '/',         label: 'Home' },
-  { href: '/search',   label: 'Books' },
-  { href: '/dashboard',label: 'Dashboard' },
-  { href: '/compare',  label: 'Compare' },
+  { href: '/',          label: 'Home' },
+  { href: '/search',    label: 'Books' },
+  { href: '/daily',     label: 'Daily' },
+  { href: '/mood',      label: 'Mood' },
+  { href: '/insights',  label: 'Insights' },
+  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/compare',   label: 'Compare' },
 ]
 
 export default function Navbar() {

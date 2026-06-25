@@ -126,3 +126,44 @@ export interface SavedQuote {
   bookTitle: string
   savedAt: string
 }
+
+// F-01 Badge Achievement System
+export interface Badge {
+  id: string
+  name: string
+  description: string
+  icon: string
+  gradient: string
+}
+
+// F-08 Cross-Book Insight Threads
+export interface InsightThread {
+  slug: string
+  title: string
+  subtitle: string
+  books: string[]
+  body: string
+  pullQuotes: { text: string; bookSlug: string }[]
+  publishedDate: string
+}
+
+// F-11 One Idea a Day Feed
+export type DailyCardType = 'quote' | 'insight' | 'action'
+export interface DailyItem {
+  type: DailyCardType
+  content: string
+  source: string
+  bookSlug: string
+  dayIndex: number
+}
+
+// F-20 Reading DNA Profile
+export interface ReadingDNAScore {
+  depth: number
+  breadth: number
+  consistency: number
+  speed: number
+  curiosity: number
+  personalityLabel: string
+  personalityDescription: string
+}

@@ -4,15 +4,18 @@ import { useRef } from 'react'
 import type { Quote } from '@/lib/types'
 import { Quote as QuoteIcon, Bookmark, BookmarkCheck } from 'lucide-react'
 import { useSavedQuotes } from '@/lib/hooks/useSavedQuotes'
+import QuoteImageGenerator from '@/components/ui/QuoteImageGenerator'
 
 export default function QuoteCards({
   quotes,
   bookTitle,
   bookSlug,
+  author = '',
 }: {
   quotes: Quote[]
   bookTitle: string
   bookSlug: string
+  author?: string
 }) {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
@@ -69,18 +72,21 @@ export default function QuoteCards({
                   <p className="text-xs" style={{ color: 'var(--color-muted-soft)' }}>
                     — {bookTitle} · {q.context}
                   </p>
-                  <button
-                    onClick={() =>
-                      saved
-                        ? removeQuote(q.text, bookSlug)
-                        : saveQuote({ text: q.text, context: q.context, bookSlug, bookTitle })
-                    }
-                    className="ml-2 flex-shrink-0 p-1.5 rounded-full transition-all opacity-0 group-hover:opacity-100"
-                    style={{ color: saved ? 'var(--color-coral)' : 'var(--color-muted-soft)' }}
-                    title={saved ? 'Remove from saved' : 'Save quote'}
-                  >
-                    {saved ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
-                  </button>
+                  <div className="flex items-center gap-0.5">
+                    <QuoteImageGenerator quote={q.text} bookTitle={bookTitle} author={author} />
+                    <button
+                      onClick={() =>
+                        saved
+                          ? removeQuote(q.text, bookSlug)
+                          : saveQuote({ text: q.text, context: q.context, bookSlug, bookTitle })
+                      }
+                      className="ml-2 flex-shrink-0 p-1.5 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                      style={{ color: saved ? 'var(--color-coral)' : 'var(--color-muted-soft)' }}
+                      title={saved ? 'Remove from saved' : 'Save quote'}
+                    >
+                      {saved ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             )

@@ -2,13 +2,21 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { BookOpen, Bookmark, Flame, CheckCircle, Quote, Copy, Trash2 } from 'lucide-react'
+import { BookOpen, Bookmark, Flame, CheckCircle, Quote, Copy, Trash2, Download, FileText } from 'lucide-react'
 import { books } from '@/lib/data/books'
 import BookCover from '@/components/ui/BookCover'
 import StreakCalendar from '@/components/StreakCalendar'
+import BadgeShelf from '@/components/dashboard/BadgeShelf'
+import XPBar from '@/components/dashboard/XPBar'
+import ReadingGoalRing from '@/components/dashboard/ReadingGoalRing'
+import ShareProgressCard from '@/components/dashboard/ShareProgressCard'
+import ReadingDNAChart from '@/components/dashboard/ReadingDNAChart'
+import ReadingTimeChart from '@/components/dashboard/ReadingTimeChart'
 import { useBookmarks } from '@/lib/hooks/useBookmarks'
 import { useSavedQuotes } from '@/lib/hooks/useSavedQuotes'
 import { useReadingActivity } from '@/lib/hooks/useReadingActivity'
+import { useNotes } from '@/lib/hooks/useNotes'
+import { exportNotesAsMarkdown, downloadMarkdown } from '@/lib/utils/exportMarkdown'
 
 function BookGrid({ slugs, emptyMsg }: { slugs: string[]; emptyMsg: string }) {
   const bookList = slugs.map(s => books.find(b => b.slug === s)).filter(Boolean) as typeof books
@@ -73,6 +81,44 @@ function SectionHeader({ icon, title }: { icon: React.ReactNode; title: string }
   )
 }
 
+function NotesExport() {
+  const { getAllNotes } = useNotes('')
+  const [exported, setExported] = useState(false)
+
+  function handleExport() {
+    const notes = getAllNotes()
+    const entries = Object.entries(notes).map(([bookSlug, content]) => ({ bookSlug, content }))
+    const md = exportNotesAsMarkdown(entries)
+    downloadMarkdown(md)
+    setExported(true)
+    setTimeout(() => setExported(false), 2000)
+  }
+
+  const notes = getAllNotes()
+  const count = Object.values(notes).filter(v => v.trim().length > 0).length
+
+  if (count === 0) return null
+
+  return (
+    <div className="flex items-center justify-between p-4 rounded-[12px] border" style={{ borderColor: 'var(--color-hairline)', backgroundColor: 'var(--color-surface-card)' }}>
+      <div className="flex items-center gap-2">
+        <FileText size={16} style={{ color: 'var(--color-coral)' }} />
+        <span className="text-sm" style={{ color: 'var(--color-body)' }}>
+          {count} book{count !== 1 ? 's' : ''} with personal notes
+        </span>
+      </div>
+      <button
+        onClick={handleExport}
+        className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all"
+        style={{ backgroundColor: exported ? '#34d399' : 'var(--color-coral)', color: '#fff' }}
+      >
+        <Download size={12} />
+        {exported ? 'Exported!' : 'Export Markdown'}
+      </button>
+    </div>
+  )
+}
+
 export default function DashboardPage() {
   const { wantToRead, currentlyReading, finished, bookmarks } = useBookmarks()
   const { quotes, removeQuote } = useSavedQuotes()
@@ -120,19 +166,25 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-12"
+          className="mb-6"
         >
-          <h1
-            className="text-4xl md:text-5xl font-normal tracking-[-0.03em] mb-3"
-            style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-ink)' }}
-          >
-            Your Dashboard
-          </h1>
+          <div className="flex items-start justify-between flex-wrap gap-4 mb-3">
+            <h1
+              className="text-4xl md:text-5xl font-normal tracking-[-0.03em]"
+              style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-ink)' }}
+            >
+              Your Dashboard
+            </h1>
+            <ShareProgressCard />
+          </div>
           <p style={{ color: 'var(--color-muted)' }}>Track your reading journey</p>
         </motion.div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+        {/* XP Bar */}
+        <XPBar />
+
+        {/* Stats + Goal Ring */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
           {statCards.map((s, i) => (
             <motion.div
               key={s.label}
@@ -157,6 +209,14 @@ export default function DashboardPage() {
               <p className="text-xs" style={{ color: 'var(--color-muted)' }}>{s.label}</p>
             </motion.div>
           ))}
+          {/* Reading Goal Ring as 5th card */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.32 }}
+          >
+            <ReadingGoalRing finishedCount={finished.length} />
+          </motion.div>
         </div>
 
         {/* Streak Calendar */}
@@ -257,6 +317,38 @@ export default function DashboardPage() {
             </div>
           </motion.section>
         )}
+
+        {/* Notes Export */}
+        <section className="mb-10">
+          <SectionHeader icon={<FileText size={18} />} title="My Notes" />
+          <NotesExport />
+        </section>
+
+        {/* Badges */}
+        <motion.section
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="mb-10"
+        >
+          <BadgeShelf />
+        </motion.section>
+
+        {/* Reading DNA */}
+        <section
+          className="rounded-[12px] p-6 mb-10 border"
+          style={{ backgroundColor: 'var(--color-surface-card)', borderColor: 'var(--color-hairline)' }}
+        >
+          <ReadingDNAChart />
+        </section>
+
+        {/* Reading Time */}
+        <section
+          className="rounded-[12px] p-6 mb-10 border"
+          style={{ backgroundColor: 'var(--color-surface-card)', borderColor: 'var(--color-hairline)' }}
+        >
+          <ReadingTimeChart />
+        </section>
 
         {/* Learning Analytics */}
         <section className="rounded-[12px] p-6" style={{ backgroundColor: 'var(--color-surface-card)' }}>

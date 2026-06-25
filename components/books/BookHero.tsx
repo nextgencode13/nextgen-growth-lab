@@ -1,11 +1,13 @@
 'use client'
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Star, Clock, BookOpen, Share2, BookmarkPlus, BookOpenCheck, CheckCircle2, Printer } from 'lucide-react'
 import Link from 'next/link'
 import type { Book } from '@/lib/types'
 import BookCover from '@/components/ui/BookCover'
 import Badge from '@/components/ui/Badge'
 import { useBookmarks } from '@/lib/hooks/useBookmarks'
+import { useReadingTimer, getBookReadingTime } from '@/lib/hooks/useReadingTimer'
 
 const difficultyColor: Record<string, string> = {
   Beginner: '#5db872',
@@ -44,6 +46,30 @@ export default function BookHero({ book }: { book: Book }) {
   const { cycleStatus, getStatus } = useBookmarks()
   const status = getStatus(book.slug) ?? 'null'
   const config = statusConfig[status as keyof typeof statusConfig]
+  const [ripple, setRipple] = useState(false)
+  const [rippleLabel, setRippleLabel] = useState('')
+  const [readingTime, setReadingTime] = useState(0)
+
+  useReadingTimer(book.slug)
+
+  useEffect(() => {
+    setReadingTime(getBookReadingTime(book.slug))
+  }, [book.slug])
+
+  function formatTime(secs: number): string {
+    if (secs < 60) return `${secs}s`
+    const m = Math.floor(secs / 60)
+    return m < 60 ? `${m}m` : `${Math.floor(m / 60)}h ${m % 60}m`
+  }
+
+  function handleStatusClick() {
+    const next = status === 'null' ? 'want' : status === 'want' ? 'reading' : status === 'reading' ? 'finished' : null
+    const labels: Record<string, string> = { want: 'Added to list!', reading: 'Now reading!', finished: 'Finished!' }
+    if (next) setRippleLabel(labels[next] ?? '')
+    cycleStatus(book.slug)
+    setRipple(true)
+    setTimeout(() => setRipple(false), 600)
+  }
 
   function share() {
     if (navigator.share) {
@@ -112,6 +138,12 @@ export default function BookHero({ book }: { book: Book }) {
                 <BookOpen size={14} />
                 {book.lessons.length} key lessons
               </span>
+              {readingTime > 0 && (
+                <span className="flex items-center gap-1.5">
+                  <Clock size={14} />
+                  {formatTime(readingTime)} spent
+                </span>
+              )}
             </div>
 
             <p
@@ -136,19 +168,47 @@ export default function BookHero({ book }: { book: Book }) {
 
             {/* Actions */}
             <div className="flex flex-wrap gap-3">
-              {/* 3-state reading status cycle button */}
-              <button
-                onClick={() => cycleStatus(book.slug)}
-                className="flex items-center gap-2 px-4 py-2 rounded-[8px] text-sm font-medium border transition-all"
-                style={{
-                  borderColor: config.border,
-                  color: config.color,
-                  backgroundColor: 'transparent',
-                }}
-              >
-                <config.Icon size={14} />
-                {config.label}
-              </button>
+              {/* 3-state reading status cycle button with ripple */}
+              <div className="relative">
+                <button
+                  onClick={handleStatusClick}
+                  className="flex items-center gap-2 px-4 py-2 rounded-[8px] text-sm font-medium border transition-all"
+                  style={{
+                    borderColor: config.border,
+                    color: config.color,
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  <config.Icon size={14} />
+                  {config.label}
+                </button>
+                <AnimatePresence>
+                  {ripple && (
+                    <motion.span
+                      initial={{ scale: 0.5, opacity: 0.5 }}
+                      animate={{ scale: 2.5, opacity: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="absolute inset-0 rounded-[8px] pointer-events-none"
+                      style={{ backgroundColor: config.color }}
+                    />
+                  )}
+                </AnimatePresence>
+                <AnimatePresence>
+                  {ripple && rippleLabel && (
+                    <motion.span
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="absolute left-0 -bottom-6 text-xs font-medium whitespace-nowrap"
+                      style={{ color: config.color }}
+                    >
+                      {rippleLabel}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </div>
 
               <button
                 onClick={share}

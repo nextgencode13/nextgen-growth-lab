@@ -1,0 +1,111 @@
+import type { DailyItem } from '@/lib/types'
+
+export const dailyFeed: DailyItem[] = [
+  // Day 0-9: Quotes
+  { dayIndex: 0, type: 'quote', content: 'You do not rise to the level of your goals. You fall to the level of your systems.', source: 'Atomic Habits', bookSlug: 'atomic-habits' },
+  { dayIndex: 1, type: 'quote', content: 'Your net worth to the world is usually determined by what remains after your bad habits are subtracted from your good ones.', source: 'Think and Grow Rich', bookSlug: 'think-and-grow-rich' },
+  { dayIndex: 2, type: 'quote', content: 'The ability to do deep work is becoming increasingly rare at exactly the same time it is becoming increasingly valuable.', source: 'Deep Work', bookSlug: 'deep-work' },
+  { dayIndex: 3, type: 'quote', content: 'If you do not prioritize your life, someone else will.', source: 'Essentialism', bookSlug: 'essentialism' },
+  { dayIndex: 4, type: 'quote', content: 'The most important investment you can make is in yourself.', source: 'Rich Dad Poor Dad', bookSlug: 'rich-dad-poor-dad' },
+  { dayIndex: 5, type: 'quote', content: 'Small, seemingly insignificant steps completed consistently over time will create a radical difference.', source: 'The Compound Effect', bookSlug: 'compound-effect' },
+  { dayIndex: 6, type: 'quote', content: 'People do not buy what you do. They buy why you do it.', source: 'Start With Why', bookSlug: 'start-with-why' },
+  { dayIndex: 7, type: 'quote', content: 'In a growth mindset, challenges are exciting rather than threatening.', source: 'Mindset', bookSlug: 'mindset' },
+  { dayIndex: 8, type: 'quote', content: 'The present moment is all you ever have.', source: 'The Power of Now', bookSlug: 'the-power-of-now' },
+  { dayIndex: 9, type: 'quote', content: 'Every great business is built around a secret that others miss.', source: 'Zero to One', bookSlug: 'zero-to-one' },
+
+  // Day 10-19: Insights
+  { dayIndex: 10, type: 'insight', content: 'The 1% rule: improving by just 1% every day leads to being 37 times better by year\'s end. Compounding applies to skills, not just money.', source: 'Atomic Habits', bookSlug: 'atomic-habits' },
+  { dayIndex: 11, type: 'insight', content: 'Deep work means scheduling uninterrupted blocks for your hardest tasks. Even 90 minutes per day of true focus outproduces 8 hours of reactive work.', source: 'Deep Work', bookSlug: 'deep-work' },
+  { dayIndex: 12, type: 'insight', content: 'The 40% rule: when your mind says you are done, you have used only 40% of your true capacity. Your limits are a story, not a fact.', source: "Can't Hurt Me", bookSlug: 'cant-hurt-me' },
+  { dayIndex: 13, type: 'insight', content: 'Ikigai — your reason for being — sits at the intersection of what you love, what you are good at, what the world needs, and what you can be paid for.', source: 'Ikigai', bookSlug: 'ikigai' },
+  { dayIndex: 14, type: 'insight', content: 'The Lean Startup\'s Build-Measure-Learn loop: ship the smallest possible version, measure real behavior, and use the data to decide whether to pivot or persevere.', source: 'The Lean Startup', bookSlug: 'lean-startup' },
+  { dayIndex: 15, type: 'insight', content: 'Naval\'s law: seek specific knowledge — knowledge you cannot be trained for. If society can train you for it, they can eventually replace you with someone cheaper.', source: 'The Almanack of Naval Ravikant', bookSlug: 'naval-almanack' },
+  { dayIndex: 16, type: 'insight', content: 'The pain + reflection formula: Ray Dalio\'s core algorithm for growth. Pain avoided produces stagnation. Pain examined produces progress.', source: 'Principles', bookSlug: 'principles' },
+  { dayIndex: 17, type: 'insight', content: 'Warren Buffett\'s secret: 99% of his wealth was accumulated after age 60. The lesson is not intelligence — it is the patience to let compounding run.', source: 'The Psychology of Money', bookSlug: 'the-psychology-of-money' },
+  { dayIndex: 18, type: 'insight', content: 'The MVP mindset: perfection delays launch; launching reveals reality. Build the smallest thing that tests your core assumption, then improve from real feedback.', source: 'Rework', bookSlug: 'rework' },
+  { dayIndex: 19, type: 'insight', content: 'Stephen Covey\'s Habit 2: Begin with the End in Mind. Every decision you make is either moving you toward or away from your written personal mission statement.', source: 'The 7 Habits of Highly Effective People', bookSlug: 'the-7-habits-of-highly-effective-people' },
+
+  // Day 20-29: Actions
+  { dayIndex: 20, type: 'action', content: 'Choose one habit to improve by 1% today. Write it down, then do it. The act of writing makes it 42% more likely to happen.', source: 'Atomic Habits', bookSlug: 'atomic-habits' },
+  { dayIndex: 21, type: 'action', content: 'Block 90 minutes tomorrow with no notifications, no email, no meetings. Use it for your single most important task. Then evaluate the output.', source: 'Deep Work', bookSlug: 'deep-work' },
+  { dayIndex: 22, type: 'action', content: 'Write your personal "Why" in one sentence: "I exist to [contribution] so that [impact]." This is the north star that makes hard decisions easier.', source: 'Start With Why', bookSlug: 'start-with-why' },
+  { dayIndex: 23, type: 'action', content: 'List your three biggest monthly expenses. Ask: which of these is an asset that grows? Which is a liability that drains? Restructure toward assets.', source: 'Rich Dad Poor Dad', bookSlug: 'rich-dad-poor-dad' },
+  { dayIndex: 24, type: 'action', content: 'Track one behavior for 7 days with a simple tally. Measurement makes the invisible visible and creates the accountability loop that drives improvement.', source: 'The Compound Effect', bookSlug: 'compound-effect' },
+  { dayIndex: 25, type: 'action', content: 'Identify the one thing you are avoiding that would most move your life forward. Schedule 30 minutes for it in the next 24 hours. Do not negotiate.', source: 'Essentialism', bookSlug: 'essentialism' },
+  { dayIndex: 26, type: 'action', content: 'Sit in silence for 10 minutes. No phone. No input. Just observe what your mind produces. This is the foundation of the present-moment awareness Tolle describes.', source: 'The Power of Now', bookSlug: 'the-power-of-now' },
+  { dayIndex: 27, type: 'action', content: 'Write a "failure report" for your last major setback. What happened? What should have happened? What will you change? Dalio calls this the core of learning.', source: 'Principles', bookSlug: 'principles' },
+  { dayIndex: 28, type: 'action', content: 'Say no to one thing today that does not pass the "Hell yes or no" filter. Every yes is a no to something else — choose deliberately.', source: 'Essentialism', bookSlug: 'essentialism' },
+  { dayIndex: 29, type: 'action', content: 'Write down your 5-year goal. Now work backward: what must be true in 3 years? 1 year? 90 days? This week? Today becomes a strategic step, not a random day.', source: 'The 7 Habits of Highly Effective People', bookSlug: 'the-7-habits-of-highly-effective-people' },
+
+  // Day 30-39: More quotes
+  { dayIndex: 30, type: 'quote', content: 'Getting 1% better every day counts for a lot in the long run.', source: 'Atomic Habits', bookSlug: 'atomic-habits' },
+  { dayIndex: 31, type: 'quote', content: 'The secret of getting ahead is getting started.', source: 'Think and Grow Rich', bookSlug: 'think-and-grow-rich' },
+  { dayIndex: 32, type: 'quote', content: 'Clarity about what matters provides clarity about what does not.', source: 'Deep Work', bookSlug: 'deep-work' },
+  { dayIndex: 33, type: 'quote', content: 'The mind is like water. When it is turbulent, it is difficult to see. When it is calm, everything becomes clear.', source: 'The Power of Now', bookSlug: 'the-power-of-now' },
+  { dayIndex: 34, type: 'quote', content: 'Wealth is the product of human capacity to think.', source: 'Rich Dad Poor Dad', bookSlug: 'rich-dad-poor-dad' },
+  { dayIndex: 35, type: 'quote', content: 'Stop explaining yourself and start acting.', source: 'Rework', bookSlug: 'rework' },
+  { dayIndex: 36, type: 'quote', content: 'Your life is the sum result of all the choices you make.', source: 'The Compound Effect', bookSlug: 'compound-effect' },
+  { dayIndex: 37, type: 'quote', content: 'Pain plus reflection equals progress.', source: 'Principles', bookSlug: 'principles' },
+  { dayIndex: 38, type: 'quote', content: 'The goal is not to be better than the other man, but your previous self.', source: "Can't Hurt Me", bookSlug: 'cant-hurt-me' },
+  { dayIndex: 39, type: 'quote', content: 'Find something more important than you are and dedicate your life to it.', source: 'Ikigai', bookSlug: 'ikigai' },
+
+  // Day 40-49: More insights
+  { dayIndex: 40, type: 'insight', content: 'Identity-based habits: instead of setting a goal, ask "Who is the person I want to become?" Then ask what that person would do right now.', source: 'Atomic Habits', bookSlug: 'atomic-habits' },
+  { dayIndex: 41, type: 'insight', content: 'The art of essentialism is the relentless pursuit of less but better. Not more options — fewer, excellent ones executed completely.', source: 'Essentialism', bookSlug: 'essentialism' },
+  { dayIndex: 42, type: 'insight', content: 'Naval\'s formula for wealth: productize yourself. Your goal is to create systems that earn while you sleep. Until then, you are renting your time.', source: 'The Almanack of Naval Ravikant', bookSlug: 'naval-almanack' },
+  { dayIndex: 43, type: 'insight', content: 'Mindset research shows that praising effort ("you worked so hard") produces resilience. Praising ability ("you are so smart") produces fragility. Apply this to yourself too.', source: 'Mindset', bookSlug: 'mindset' },
+  { dayIndex: 44, type: 'insight', content: 'Monopoly is not the enemy of progress — it is the engine of it. Companies only innovate aggressively when they have the market position to profit from innovation.', source: 'Zero to One', bookSlug: 'zero-to-one' },
+  { dayIndex: 45, type: 'insight', content: 'Phil Knight\'s lesson: if you are the most capable person in the room, you are in the wrong room. Hire people who make you feel slightly inadequate.', source: 'Shoe Dog', bookSlug: 'shoe-dog' },
+  { dayIndex: 46, type: 'insight', content: 'The circle of concern vs. circle of influence: you can only control what is inside your influence. Worrying about the rest is energy spent on nothing.', source: 'The 7 Habits of Highly Effective People', bookSlug: 'the-7-habits-of-highly-effective-people' },
+  { dayIndex: 47, type: 'insight', content: 'The biggest risk is not losing money. It is missing the right opportunity because you were playing too conservatively with money you could afford to lose.', source: 'The Psychology of Money', bookSlug: 'the-psychology-of-money' },
+  { dayIndex: 48, type: 'insight', content: 'Lean Startup\'s pivot vs. persevere decision: when your core assumption is wrong, pivoting is not failure — it is the scientific method applied to business.', source: 'The Lean Startup', bookSlug: 'lean-startup' },
+  { dayIndex: 49, type: 'insight', content: 'The Japanese concept of ma — negative space, the pause between notes — is as important as the music. Your rest and recovery are productive, not indulgent.', source: 'Ikigai', bookSlug: 'ikigai' },
+
+  // Day 50-59: More actions
+  { dayIndex: 50, type: 'action', content: 'Design your environment: move one cue for a good habit into plain sight. Move one cue for a bad habit out of reach. Notice the difference over the week.', source: 'Atomic Habits', bookSlug: 'atomic-habits' },
+  { dayIndex: 51, type: 'action', content: 'Audit your last week\'s calendar. What percentage of time was spent in deep work vs. shallow work? What would your ideal ratio look like?', source: 'Deep Work', bookSlug: 'deep-work' },
+  { dayIndex: 52, type: 'action', content: 'Calculate your real hourly rate: divide your last paycheck by all the hours that earning it actually cost (commute, prep, recovery). Is it what you thought?', source: 'Rich Dad Poor Dad', bookSlug: 'rich-dad-poor-dad' },
+  { dayIndex: 53, type: 'action', content: 'Choose one skill to go an inch wide and a mile deep. Spend 30 days studying only that skill. Specific knowledge compounds; broad dabbling does not.', source: 'The Almanack of Naval Ravikant', bookSlug: 'naval-almanack' },
+  { dayIndex: 54, type: 'action', content: 'Write down your three most important relationships. When did you last invest intentionally in each? Schedule a specific action for one of them this week.', source: 'Ikigai', bookSlug: 'ikigai' },
+  { dayIndex: 55, type: 'action', content: 'Find one task you have been doing manually that could be systematized. Build the system, then execute the system. Your goal is to make yourself redundant in it.', source: 'Rework', bookSlug: 'rework' },
+  { dayIndex: 56, type: 'action', content: 'The scorecard question: in 5 years, will you regret not doing this? Regret minimization is Jeff Bezos\'s actual decision framework. Try it on your hardest current decision.', source: 'The Psychology of Money', bookSlug: 'the-psychology-of-money' },
+  { dayIndex: 57, type: 'action', content: 'Push past your comfort zone in one physical or mental challenge today. Go further than you think you can. Then note: your previous limit was just an estimate.', source: "Can't Hurt Me", bookSlug: 'cant-hurt-me' },
+  { dayIndex: 58, type: 'action', content: 'Identify your one most important quarterly goal. Every day this week, do one thing that moves you toward it. Nothing else gets priority until it is done.', source: 'Essentialism', bookSlug: 'essentialism' },
+  { dayIndex: 59, type: 'action', content: 'Ask one trusted person for honest feedback on your work or behavior this week. Use Dalio\'s rule: they must be willing to be radically honest, and you must listen without defending.', source: 'Principles', bookSlug: 'principles' },
+
+  // Day 60-69: More quotes
+  { dayIndex: 60, type: 'quote', content: 'An investment in knowledge pays the best interest.', source: 'Think and Grow Rich', bookSlug: 'think-and-grow-rich' },
+  { dayIndex: 61, type: 'quote', content: 'The two most important days in your life are the day you are born and the day you find out why.', source: 'Start With Why', bookSlug: 'start-with-why' },
+  { dayIndex: 62, type: 'quote', content: 'Nothing is more powerful than an idea whose time has come.', source: 'Zero to One', bookSlug: 'zero-to-one' },
+  { dayIndex: 63, type: 'quote', content: 'You become what you believe.', source: 'Mindset', bookSlug: 'mindset' },
+  { dayIndex: 64, type: 'quote', content: 'A person who never made a mistake never tried anything new.', source: 'Think and Grow Rich', bookSlug: 'think-and-grow-rich' },
+  { dayIndex: 65, type: 'quote', content: 'The cave you fear to enter holds the treasure you seek.', source: "Can't Hurt Me", bookSlug: 'cant-hurt-me' },
+  { dayIndex: 66, type: 'quote', content: 'Seek not to be understood, but to understand.', source: 'The 7 Habits of Highly Effective People', bookSlug: 'the-7-habits-of-highly-effective-people' },
+  { dayIndex: 67, type: 'quote', content: 'Play long-term games with long-term people.', source: 'The Almanack of Naval Ravikant', bookSlug: 'naval-almanack' },
+  { dayIndex: 68, type: 'quote', content: 'If you want to go fast, go alone. If you want to go far, go together.', source: 'Shoe Dog', bookSlug: 'shoe-dog' },
+  { dayIndex: 69, type: 'quote', content: 'Money is only a tool. It will take you wherever you wish, but it will not replace you as the driver.', source: 'The Psychology of Money', bookSlug: 'the-psychology-of-money' },
+
+  // Day 70-79: More insights
+  { dayIndex: 70, type: 'insight', content: 'The science of "Don\'t break the chain": tracking a habit visually and maintaining a streak activates loss aversion in your favor. Missing feels worse than showing up.', source: 'Atomic Habits', bookSlug: 'atomic-habits' },
+  { dayIndex: 71, type: 'insight', content: 'Deep focus is a skill, not a trait. Newport\'s research shows that people who schedule deep work sessions improve their concentration capacity over months, just like a muscle.', source: 'Deep Work', bookSlug: 'deep-work' },
+  { dayIndex: 72, type: 'insight', content: 'The Lean Startup teaches: fall in love with the problem, not the solution. Most failed startups solved the wrong problem brilliantly. Validate the problem first.', source: 'The Lean Startup', bookSlug: 'lean-startup' },
+  { dayIndex: 73, type: 'insight', content: 'Simon Sinek\'s limbic system insight: decisions are made in the emotional brain, rationalized by the thinking brain afterward. Lead with feeling, support with facts.', source: 'Start With Why', bookSlug: 'start-with-why' },
+  { dayIndex: 74, type: 'insight', content: 'Essentialism is not about doing less. It is about doing the right things completely, rather than everything partially. One excellent output beats five mediocre ones.', source: 'Essentialism', bookSlug: 'essentialism' },
+  { dayIndex: 75, type: 'insight', content: 'Ikigai research from Okinawa shows that purpose — knowing why you get up in the morning — is correlated with a 7-year longer life expectancy. Purpose is health.', source: 'Ikigai', bookSlug: 'ikigai' },
+  { dayIndex: 76, type: 'insight', content: 'Napoleon Hill\'s mastermind principle: two minds working in harmony create a third, invisible mind that neither possesses alone. Your network is your thinking partner.', source: 'Think and Grow Rich', bookSlug: 'think-and-grow-rich' },
+  { dayIndex: 77, type: 'insight', content: 'Zero to One\'s contrarian test: "What important truth do very few people agree with you on?" Your answer reveals whether you think originally or consensually.', source: 'Zero to One', bookSlug: 'zero-to-one' },
+  { dayIndex: 78, type: 'insight', content: 'Dweck\'s findings: the growth mindset is not innate. It is a practice. Every time you reframe failure as information rather than identity, you are actively building it.', source: 'Mindset', bookSlug: 'mindset' },
+  { dayIndex: 79, type: 'insight', content: 'Rework\'s hiring principle: hire great writers. Clear writing reflects clear thinking. If someone cannot explain their work in writing, they cannot think through it either.', source: 'Rework', bookSlug: 'rework' },
+
+  // Day 80-89: More actions
+  { dayIndex: 80, type: 'action', content: 'Read for 20 minutes before checking your phone tomorrow morning. Notice how it changes the quality of your first hour. Repeat for one week and compare.', source: 'Deep Work', bookSlug: 'deep-work' },
+  { dayIndex: 81, type: 'action', content: 'Write your personal investment policy statement: under what conditions will you invest, in what, and how much? Remove decisions from emotion by making them in advance.', source: 'The Psychology of Money', bookSlug: 'the-psychology-of-money' },
+  { dayIndex: 82, type: 'action', content: 'Identify one assumption underlying your most important current project. Design the cheapest possible experiment to test whether it is true before investing further.', source: 'The Lean Startup', bookSlug: 'lean-startup' },
+  { dayIndex: 83, type: 'action', content: 'Habit stack: pair a new habit with something you already do daily. "After I pour my morning coffee, I will write three priorities for the day." Execute for 7 days.', source: 'Atomic Habits', bookSlug: 'atomic-habits' },
+  { dayIndex: 84, type: 'action', content: 'List 10 things you are currently doing. Circle the top 3 by impact. What would happen if you stopped the other 7? Try stopping one this week.', source: 'Essentialism', bookSlug: 'essentialism' },
+  { dayIndex: 85, type: 'action', content: 'Write your own eulogy — what do you want people to say about how you lived? Work backward from that to what you should start doing differently this week.', source: 'Principles', bookSlug: 'principles' },
+  { dayIndex: 86, type: 'action', content: 'Spend 15 minutes in deep play today — something absorbing and purposeless. Then notice: this is what Csikszentmihalyi called flow. It is not wasted time; it is restoration.', source: 'Ikigai', bookSlug: 'ikigai' },
+  { dayIndex: 87, type: 'action', content: 'Ask someone you admire: "What book changed the way you think most?" Then read it. Compounding of ideas works just like compounding of money.', source: 'Think and Grow Rich', bookSlug: 'think-and-grow-rich' },
+  { dayIndex: 88, type: 'action', content: 'Find one area where you are playing to avoid losing instead of playing to win. Shift your strategy in that area from defensive to offensive. Notice the energy difference.', source: 'Mindset', bookSlug: 'mindset' },
+  { dayIndex: 89, type: 'action', content: 'Eliminate one commitment from your life this week that you said yes to out of guilt rather than enthusiasm. Protect that time for what genuinely matters.', source: 'Essentialism', bookSlug: 'essentialism' },
+]
