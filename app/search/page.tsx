@@ -6,6 +6,7 @@ import { Search, SlidersHorizontal, X } from 'lucide-react'
 import { books, categories } from '@/lib/data/books'
 import BookCard from '@/components/books/BookCard'
 import { scoreSearch } from '@/lib/utils/search'
+import { BookCardSkeleton } from '@/components/ui/Skeleton'
 
 const difficulties = ['Beginner', 'Intermediate', 'Advanced']
 const sortOptions = ['Rating', 'Title', 'Read Time']
@@ -13,6 +14,7 @@ const sortOptions = ['Rating', 'Title', 'Read Time']
 export default function SearchPage() {
   const params = useSearchParams()
   const [query, setQuery] = useState('')
+  const [mounted, setMounted] = useState(false)
   const [category, setCategory] = useState(params.get('category') ?? '')
   const [difficulty, setDifficulty] = useState('')
   const [sort, setSort] = useState('Rating')
@@ -20,6 +22,8 @@ export default function SearchPage() {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const searchContainerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => { setMounted(true) }, [])
 
   useEffect(() => {
     const c = params.get('category')
@@ -270,8 +274,13 @@ export default function SearchPage() {
         </p>
 
         {/* Grid */}
+        {!mounted && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {Array.from({ length: 8 }).map((_, i) => <BookCardSkeleton key={i} />)}
+          </div>
+        )}
         <AnimatePresence mode="popLayout">
-          {filtered.length > 0 ? (
+          {mounted && filtered.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {filtered.map(({ book, matchedTag }, i) => (
                 <motion.div
@@ -295,7 +304,7 @@ export default function SearchPage() {
                 </motion.div>
               ))}
             </div>
-          ) : (
+          ) : mounted ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -314,7 +323,7 @@ export default function SearchPage() {
                 Clear all filters
               </button>
             </motion.div>
-          )}
+          ) : null}
         </AnimatePresence>
       </div>
     </div>

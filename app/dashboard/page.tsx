@@ -17,9 +17,18 @@ import { useSavedQuotes } from '@/lib/hooks/useSavedQuotes'
 import { useReadingActivity } from '@/lib/hooks/useReadingActivity'
 import { useNotes } from '@/lib/hooks/useNotes'
 import { exportNotesAsMarkdown, downloadMarkdown } from '@/lib/utils/exportMarkdown'
+import { StatCardSkeleton, BookCardSkeleton } from '@/components/ui/Skeleton'
 
-function BookGrid({ slugs, emptyMsg }: { slugs: string[]; emptyMsg: string }) {
+function BookGrid({ slugs, emptyMsg, loading = false }: { slugs: string[]; emptyMsg: string; loading?: boolean }) {
   const bookList = slugs.map(s => books.find(b => b.slug === s)).filter(Boolean) as typeof books
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 4 }).map((_, i) => <BookCardSkeleton key={i} />)}
+      </div>
+    )
+  }
 
   if (bookList.length === 0) {
     return (
@@ -124,6 +133,9 @@ export default function DashboardPage() {
   const { quotes, removeQuote } = useSavedQuotes()
   const { currentStreak, longestStreak } = useReadingActivity()
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
 
   const statCards = [
     {
@@ -185,38 +197,43 @@ export default function DashboardPage() {
 
         {/* Stats + Goal Ring */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
-          {statCards.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: i * 0.08 }}
-              className="rounded-[12px] p-5 border"
-              style={{ backgroundColor: 'var(--color-canvas)', borderColor: 'var(--color-hairline)' }}
-            >
-              <div
-                className="w-9 h-9 rounded-lg flex items-center justify-center mb-3"
-                style={{ backgroundColor: `${s.color}18`, color: s.color }}
-              >
-                {s.icon}
-              </div>
-              <p
-                className="text-2xl font-normal mb-0.5"
-                style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-ink)' }}
-              >
-                {s.value}
-              </p>
-              <p className="text-xs" style={{ color: 'var(--color-muted)' }}>{s.label}</p>
-            </motion.div>
-          ))}
-          {/* Reading Goal Ring as 5th card */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.32 }}
-          >
-            <ReadingGoalRing finishedCount={finished.length} />
-          </motion.div>
+          {!mounted
+            ? Array.from({ length: 5 }).map((_, i) => <StatCardSkeleton key={i} />)
+            : <>
+                {statCards.map((s, i) => (
+                  <motion.div
+                    key={s.label}
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.45, delay: i * 0.08 }}
+                    className="rounded-[12px] p-5 border"
+                    style={{ backgroundColor: 'var(--color-canvas)', borderColor: 'var(--color-hairline)' }}
+                  >
+                    <div
+                      className="w-9 h-9 rounded-lg flex items-center justify-center mb-3"
+                      style={{ backgroundColor: `${s.color}18`, color: s.color }}
+                    >
+                      {s.icon}
+                    </div>
+                    <p
+                      className="text-2xl font-normal mb-0.5"
+                      style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-ink)' }}
+                    >
+                      {s.value}
+                    </p>
+                    <p className="text-xs" style={{ color: 'var(--color-muted)' }}>{s.label}</p>
+                  </motion.div>
+                ))}
+                {/* Reading Goal Ring as 5th card */}
+                <motion.div
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: 0.32 }}
+                >
+                  <ReadingGoalRing finishedCount={finished.length} />
+                </motion.div>
+              </>
+          }
         </div>
 
         {/* Streak Calendar */}
@@ -237,19 +254,19 @@ export default function DashboardPage() {
         {/* Currently Reading */}
         <section className="mb-10">
           <SectionHeader icon={<BookOpen size={18} />} title="Currently Reading" />
-          <BookGrid slugs={currentlyReading} emptyMsg="Not reading anything yet." />
+          <BookGrid slugs={currentlyReading} emptyMsg="Not reading anything yet." loading={!mounted} />
         </section>
 
         {/* Want to Read */}
         <section className="mb-10">
           <SectionHeader icon={<Bookmark size={18} />} title="Want to Read" />
-          <BookGrid slugs={wantToRead} emptyMsg="No books queued up yet." />
+          <BookGrid slugs={wantToRead} emptyMsg="No books queued up yet." loading={!mounted} />
         </section>
 
         {/* Finished */}
         <section className="mb-10">
           <SectionHeader icon={<CheckCircle size={18} />} title="Finished" />
-          <BookGrid slugs={finished} emptyMsg="No finished books yet — start reading!" />
+          <BookGrid slugs={finished} emptyMsg="No finished books yet — start reading!" loading={!mounted} />
         </section>
 
         {/* Saved Quotes */}

@@ -5,6 +5,7 @@ import type { Quote } from '@/lib/types'
 import { Quote as QuoteIcon, Bookmark, BookmarkCheck } from 'lucide-react'
 import { useSavedQuotes } from '@/lib/hooks/useSavedQuotes'
 import QuoteImageGenerator from '@/components/ui/QuoteImageGenerator'
+import EmbedSnippet from '@/components/ui/EmbedSnippet'
 
 export default function QuoteCards({
   quotes,
@@ -74,6 +75,7 @@ export default function QuoteCards({
                   </p>
                   <div className="flex items-center gap-0.5">
                     <QuoteImageGenerator quote={q.text} bookTitle={bookTitle} author={author} />
+                    <EmbedSnippet quote={q.text} book={bookTitle} author={author} />
                     <button
                       onClick={() =>
                         saved
